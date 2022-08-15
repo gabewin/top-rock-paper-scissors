@@ -18,6 +18,7 @@ function playRound(playerSelection, computerSelection){
     
     //Tie scenarios
     if (player == comp ){
+        console.log('tie');
         return ('Tie');
     }
     // lose scenarios
@@ -26,11 +27,13 @@ function playRound(playerSelection, computerSelection){
         || ((player == 'paper') && (comp == 'scissors'))
         || ((player == 'scissors') && (comp == 'rock'))
     ) {
+        console.log('lose');
         return ('Lose');
 
     // must be a win then
     } 
     else {
+        console.log('win');
         return ('Win');
     }
 
@@ -61,4 +64,12 @@ function game(){
     console.log(`Your won ${playerScore} games and the computer won ${compScore}`);
 }
 
-game();
+const r = document.getElementById('r');
+r.addEventListener('click', () => { playRound('rock', getComputerChoice()); });
+
+const p = document.getElementById('p');
+p.addEventListener('click', () => { playRound('paper', getComputerChoice()); });
+
+const s = document.getElementById('s');
+s.addEventListener('click', () => { playRound('scissors', getComputerChoice()); });
+
