@@ -1,3 +1,7 @@
+let playerScore = 0;
+let compScore = 0;
+let newGame = false;
+
 function getComputerChoice(){
 
     switch (Math.floor(Math.random() * 3)) {
@@ -19,7 +23,7 @@ function playRound(playerSelection, computerSelection){
     //Tie scenarios
     if (player == comp ){
         console.log('tie');
-        return ('Tie');
+        return ('It\'s a Tie!');
     }
     // lose scenarios
     else if (
@@ -28,48 +32,68 @@ function playRound(playerSelection, computerSelection){
         || ((player == 'scissors') && (comp == 'rock'))
     ) {
         console.log('lose');
-        return ('Lose');
+        compScore++;
+        return (`You Lose! ${computerSelection} beats ${playerSelection}!`);
 
     // must be a win then
     } 
     else {
         console.log('win');
-        return ('Win');
+        playerScore++;
+        return (`You win! ${playerSelection} beats ${computerSelection}`);
     }
 
 }
 
-function game(){
-    let playerScore = 0;
-    let compScore = 0;
-    for (let i = 0; i<5; i++){
-        
-        let playerChoice = prompt("Rock, Paper, or Scissors?");
-        let compChoice = getComputerChoice();
-        let outcome = (playRound(playerChoice, compChoice));
-
-        if (outcome == 'Win'){
-            playerScore++;
-            console.log(`You win! ${playerChoice} beats ${compChoice}`);
-        }
-        else if (outcome == 'Lose'){
-            compScore++;
-            console.log(`You Lose! ${compChoice} beats ${playerChoice}!`);
-        }
-        else {
-            console.log('You Tie!')
-        }
-   
+function displayResults(results){
+    const container = document.querySelector('#results');
+    if(newGame){
+        console.log('gameover');
+        container.replaceChildren();
+        newGame = false;
     }
-    console.log(`Your won ${playerScore} games and the computer won ${compScore}`);
+
+    const content = document.createElement('div');
+    content.classList.add('content');
+    content.textContent = (`${results} Player: ${playerScore} Computer: ${compScore}`);
+    container.appendChild(content);
+
+    if (playerScore >= 5){
+        const gameOver = document.createElement('div');
+        gameOver.classList.add('gameOver');
+        gameOver.textContent = (`Game over! You win! Player: ${playerScore} Computer: ${compScore}`);
+        container.appendChild(gameOver);
+        playerScore=0;
+        compScore=0;
+        newGame = true;
+    }
+    if (compScore >= 5){
+        const gameOver = document.createElement('div');
+        gameOver.classList.add('gameOver');
+        gameOver.textContent = (`Game Over! You lose! Player: ${playerScore} Computer: ${compScore}`);
+        container.appendChild(gameOver);
+        playerScore=0;
+        compScore=0;
+        newGame = true;
+    }
+
+    
+
+
+
 }
 
 const r = document.getElementById('r');
-r.addEventListener('click', () => { playRound('rock', getComputerChoice()); });
+r.addEventListener('click', () => { 
+    displayResults(playRound('rock', getComputerChoice()));
+});
 
 const p = document.getElementById('p');
-p.addEventListener('click', () => { playRound('paper', getComputerChoice()); });
+p.addEventListener('click', () => { 
+    displayResults(playRound('paper', getComputerChoice())); });
 
 const s = document.getElementById('s');
-s.addEventListener('click', () => { playRound('scissors', getComputerChoice()); });
+s.addEventListener('click', () => { 
+    displayResults(playRound('scissors', getComputerChoice())); 
+});
 
